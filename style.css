@@ -1,0 +1,10 @@
+#searchElement {
+    padding: 30px 20%;
+}
+#searchButton {
+    background-color: #F06C4E;
+    color: white;
+}
+#searchButton:hover {
+    background-color: #e95736;
+}
