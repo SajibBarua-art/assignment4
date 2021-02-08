@@ -8,19 +8,27 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- To input textbox and search button -->
     <div id="searchElements" class="input-group">
         <input id="searchBox" type="text" placeholder="Search for Meal Category...">
         <button type="button" id="searchButton">Search</button>
     </div>
 
+    <!-- To show the search error message -->
+    <div>
+        <p id="errorMessage">OOPS! Your search item is not found! Try again.</p>
+    </div>
+
+    <!-- To show the list of ingredients -->
     <ul id="ingredients">
         
     </ul>
 
+    <!-- To show the all found meal-->
     <div id="relatedMeals" class="container">
         
     </div>
-
+    
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,9 +1,10 @@
 // To show the ingredients of meal
-const ingredientsDetail = (mealId, mealName) => {
+const ingredientsDetail = (mealId) => {
     fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
         .then(response => response.json())
         .then(data => {
             const mealData = data.meals[0];
+            const mealName = mealData.strMeal;
             const ingredientsList = [
                 mealData.strIngredient1,
                 mealData.strIngredient2,
@@ -16,7 +17,7 @@ const ingredientsDetail = (mealId, mealName) => {
                 mealData.strIngredient9,
                 mealData.strIngredient10
             ];
-            
+            const ul = document.getElementById('ingredients');
             const div = document.createElement('div');
             const intro = `
                 <h3>${mealName}</h3>
@@ -28,8 +29,6 @@ const ingredientsDetail = (mealId, mealName) => {
                 if (item.length) {
                     const li = document.createElement('li');
                     li.innerText = item;
-                    const ul = document.getElementById('ingredients');
-                    
                     ul.appendChild(li);
                 }
             })
@@ -39,14 +38,12 @@ const mealDetails = mealData => {
     const mealImage = mealData.strMealThumb;
     const mealDescription = mealData.strMeal;
     const mealId = mealData.idMeal;
-     console.log(mealDescription);
 
     const relatedMeals = document.getElementById('relatedMeals');
     const div = document.createElement('div');
     div.className = 'mealInfo';
-    // console.log(mealId);
     const mealInformation = `
-        <div onclick='ingredientsDetail(${mealId}, ${mealDescription})'>
+        <div onclick='ingredientsDetail(${mealId})'>
             <img class="mealImage" src="${mealImage}">
             <h3 class="mealName">${mealDescription}</h3>
         </div>
@@ -66,10 +63,15 @@ const allMealsDetails = searchMealCategory => {
     fetch(url + searchMealCategory)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            const errorId = document.getElementById('errorMessage');
+            errorId.style.display = "none";
             const allMeals = data.meals;
             allMeals.map((mealData) => mealDetails(mealData));
         })
+    .catch(error => {
+        const errorId = document.getElementById("errorMessage");
+        errorId.style.display = "block";
+    })
 }
 const main = () => {
     const mealCategoryId = document.getElementById('searchBox');
