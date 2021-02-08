@@ -1,5 +1,8 @@
-// To show the ingredients of meal
+// To show the ingredients of the meal
 const ingredientsDetail = (mealId) => {
+    // To display the ingredient section
+    document.getElementById('ingredientsBody').style.display = 'block';
+    
     fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
         .then(response => response.json())
         .then(data => {
@@ -17,39 +20,42 @@ const ingredientsDetail = (mealId) => {
                 mealData.strIngredient9,
                 mealData.strIngredient10
             ];
+            const ingredientsDiv = document.getElementById('ingredientsBody');
             const ul = document.getElementById('ingredients');
-            const div = document.createElement('div');
-            const intro = `
+            let intro = `
                 <h3>${mealName}</h3>
                 <h4>Ingredients are: </h4>
             `
-            div.innerHTML = intro;
-            ul.appendChild(div);
+            let ingredients = `
+            <ul>
+            `;
             ingredientsList.forEach(item => {
-                if (item.length) {
-                    const li = document.createElement('li');
-                    li.innerText = item;
-                    ul.appendChild(li);
+                if(item !== null) {
+                    if (item.length) {
+                        ingredients += `
+                            <li>${item}</li>
+                        `
+                    }
                 }
             })
+            ingredients += `
+            </ul>
+            `;
+            const introAndIngredients = intro + ingredients;
+            ingredientsDiv.innerHTML = introAndIngredients;
         })
 }
+let mealsInformation = ``;
 const mealDetails = mealData => {
     const mealImage = mealData.strMealThumb;
     const mealDescription = mealData.strMeal;
     const mealId = mealData.idMeal;
-
-    const relatedMeals = document.getElementById('relatedMeals');
-    const div = document.createElement('div');
-    div.className = 'mealInfo';
-    const mealInformation = `
-        <div onclick='ingredientsDetail(${mealId})'>
+    mealsInformation += `
+        <div onclick='ingredientsDetail(${mealId})' class="mealInfo">
             <img class="mealImage" src="${mealImage}">
             <h3 class="mealName">${mealDescription}</h3>
         </div>
     `
-    div.innerHTML = mealInformation;
-    relatedMeals.appendChild(div);
 }
 const allMealsDetails = searchMealCategory => {
     let url = "";
@@ -67,6 +73,8 @@ const allMealsDetails = searchMealCategory => {
             errorId.style.display = "none";
             const allMeals = data.meals;
             allMeals.map((mealData) => mealDetails(mealData));
+            const relatedMealsDiv = document.getElementById('relatedMeals');
+            relatedMealsDiv.innerHTML = mealsInformation;
         })
     .catch(error => {
         const errorId = document.getElementById("errorMessage");
@@ -77,7 +85,10 @@ const main = () => {
     const mealCategoryId = document.getElementById('searchBox');
     const searchButtonId = document.getElementById('searchButton');
     searchButtonId.addEventListener('click', () => {
-        const mealId = allMealsDetails(mealCategoryId.value);
+        allMealsDetails(mealCategoryId.value);
+        mealCategoryId.value = "";
+        // To not display the ingredient section
+        document.getElementById('ingredientsBody').style.display = 'none';
     })
 }
 main();
