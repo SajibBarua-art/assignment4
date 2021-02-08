@@ -75,6 +75,7 @@ const allMealsDetails = searchMealCategory => {
             allMeals.map((mealData) => mealDetails(mealData));
             const relatedMealsDiv = document.getElementById('relatedMeals');
             relatedMealsDiv.innerHTML = mealsInformation;
+            mealsInformation = "";
         })
     .catch(error => {
         const errorId = document.getElementById("errorMessage");
