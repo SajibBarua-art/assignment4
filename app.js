@@ -1,23 +1,72 @@
+// To show the ingredients of meal
+const ingredientsDetail = (mealId, mealName) => {
+    fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+        .then(response => response.json())
+        .then(data => {
+            const mealData = data.meals[0];
+            const ingredientsList = [
+                mealData.strIngredient1,
+                mealData.strIngredient2,
+                mealData.strIngredient3,
+                mealData.strIngredient4,
+                mealData.strIngredient5,
+                mealData.strIngredient6,
+                mealData.strIngredient7,
+                mealData.strIngredient8,
+                mealData.strIngredient9,
+                mealData.strIngredient10
+            ];
+            
+            const div = document.createElement('div');
+            const intro = `
+                <h3>${mealName}</h3>
+                <h4>Ingredients are: </h4>
+            `
+            div.innerHTML = intro;
+            ul.appendChild(div);
+            ingredientsList.forEach(item => {
+                if (item.length) {
+                    const li = document.createElement('li');
+                    li.innerText = item;
+                    const ul = document.getElementById('ingredients');
+                    
+                    ul.appendChild(li);
+                }
+            })
+        })
+}
 const mealDetails = mealData => {
     const mealImage = mealData.strMealThumb;
     const mealDescription = mealData.strMeal;
-    // console.log(mealImages);
+    const mealId = mealData.idMeal;
+     console.log(mealDescription);
 
     const relatedMeals = document.getElementById('relatedMeals');
     const div = document.createElement('div');
-    div.className = 'mealInfo'
+    div.className = 'mealInfo';
+    // console.log(mealId);
     const mealInformation = `
-        <img class="mealImage" src="${mealImage}">
-        <h3 class="mealName">${mealDescription}</h3>
+        <div onclick='ingredientsDetail(${mealId}, ${mealDescription})'>
+            <img class="mealImage" src="${mealImage}">
+            <h3 class="mealName">${mealDescription}</h3>
+        </div>
     `
     div.innerHTML = mealInformation;
     relatedMeals.appendChild(div);
 }
 const allMealsDetails = searchMealCategory => {
-    fetch("https://www.themealdb.com/api/json/v1/1/filter.php?c="+searchMealCategory)
+    let url = "";
+    if (searchMealCategory.length <= 2) {
+        // To search meal by first character
+        url = "https://www.themealdb.com/api/json/v1/1/search.php?f=";
+    } else {
+        // To search meal by name
+        url = "https://www.themealdb.com/api/json/v1/1/filter.php?c=";
+    }
+    fetch(url + searchMealCategory)
         .then(response => response.json())
         .then(data => {
-             //console.log(data);
+            console.log(data);
             const allMeals = data.meals;
             allMeals.map((mealData) => mealDetails(mealData));
         })
@@ -26,7 +75,7 @@ const main = () => {
     const mealCategoryId = document.getElementById('searchBox');
     const searchButtonId = document.getElementById('searchButton');
     searchButtonId.addEventListener('click', () => {
-        allMealsDetails(mealCategoryId.value);
+        const mealId = allMealsDetails(mealCategoryId.value);
     })
 }
 main();

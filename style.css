@@ -33,6 +33,7 @@
     width: 100%;
     border-radius: 10px;
     background-color: #F8F7F5;
+    cursor: pointer;
 }
 .mealName {
     text-align: center;
