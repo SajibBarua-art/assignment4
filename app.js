@@ -1,6 +1,6 @@
 // To show the ingredients of the meal
 const ingredientsDetail = (mealId) => {
-    // To display the ingredient section
+    // To display the ingredients list
     document.getElementById('ingredientsBody').style.display = 'block';
     
     fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
@@ -8,6 +8,7 @@ const ingredientsDetail = (mealId) => {
         .then(data => {
             const mealData = data.meals[0];
             const mealName = mealData.strMeal;
+            // To take at most ten ingredients
             const ingredientsList = [
                 mealData.strIngredient1,
                 mealData.strIngredient2,
@@ -21,11 +22,12 @@ const ingredientsDetail = (mealId) => {
                 mealData.strIngredient10
             ];
             const ingredientsDiv = document.getElementById('ingredientsBody');
-            const ul = document.getElementById('ingredients');
+            // To take the Meal name
             let intro = `
                 <h3>${mealName}</h3>
                 <h4>Ingredients are: </h4>
             `
+            // To take the list of all meal ingredients
             let ingredients = `
             <ul>
             `;
@@ -41,10 +43,13 @@ const ingredientsDetail = (mealId) => {
             ingredients += `
             </ul>
             `;
+            // Add them to make one string 
             const introAndIngredients = intro + ingredients;
             ingredientsDiv.innerHTML = introAndIngredients;
         })
 }
+
+// To the meal image and name section
 let mealsInformation = ``;
 const mealDetails = mealData => {
     const mealImage = mealData.strMealThumb;
@@ -69,15 +74,20 @@ const allMealsDetails = searchMealCategory => {
     fetch(url + searchMealCategory)
         .then(response => response.json())
         .then(data => {
+            // To hide the error message when the search elements are found
             const errorId = document.getElementById('errorMessage');
             errorId.style.display = "none";
+            // To get the meal details
             const allMeals = data.meals;
             allMeals.map((mealData) => mealDetails(mealData));
+            // To show the meal details
             const relatedMealsDiv = document.getElementById('relatedMeals');
             relatedMealsDiv.innerHTML = mealsInformation;
             mealsInformation = "";
         })
     .catch(error => {
+        // To show the error message
+        // when there is no search element found
         const errorId = document.getElementById("errorMessage");
         errorId.style.display = "block";
     })
@@ -88,7 +98,7 @@ const main = () => {
     searchButtonId.addEventListener('click', () => {
         allMealsDetails(mealCategoryId.value);
         mealCategoryId.value = "";
-        // To not display the ingredient section
+        // To hide the ingredient section
         document.getElementById('ingredientsBody').style.display = 'none';
     })
 }
